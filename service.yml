@@ -1,0 +1,15 @@
+apiVersion: v1  # Specifies the API version for the service
+kind: Service  # Defines that this is a Service resource in Kubernetes
+metadata:
+  name: tinytechservices-service  # The name of the service
+  namespace: tinytechservices-namespace  # Ensures the service exists in the same namespace as the deployment
+
+spec:
+  type: NodePort  # Exposes the service to the host machine for external access
+  selector:
+    app: tinytechservicespods  # This should match the label in Deployment.yaml to link the service to the correct pods
+  ports:
+  - protocol: TCP  # Defines the communication protocol
+    port: 80  # The port exposed for external access
+    targetPort: 8000  # The port inside the container where the FastAPI app is running
+

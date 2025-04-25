@@ -1,0 +1,23 @@
+apiVersion: apps/v1  # Specifies the API version used for deployment
+kind: Deployment  # Defines that this is a Deployment resource in Kubernetes
+metadata:
+  name: tinytechservicesdeployment  # The name of the deployment. You can write according to you
+  namespace: tinytechservices-namespace  # The custom namespace where this deployment will be created
+
+spec:
+  replicas: 2  # Number of pod instances to run (can be scaled up/down)
+  selector:
+    matchLabels:
+      app: tinytechservicespods  # Must match the label in the template section below
+
+  template:  # Defines the pod structure within the deployment
+    metadata:
+      labels:
+        app: tinytechservicespods  # Corrected: This must match the selector above
+    spec:
+      containers:
+      - name: tinytechservicescontainer  # Name of the container inside the pod. kubernetes automatically creates this container in pods
+        image: atulkrishnathakur/tinytechservices:1.0  # Docker image used to create the container. Give here <username>/<imagename>:<tag> of dockerhub
+        ports:
+        - containerPort: 8000  # The port on which the FastAPI application runs inside the container
+
