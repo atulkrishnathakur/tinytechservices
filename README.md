@@ -215,3 +215,65 @@ minikube ip
 ```
 http://192.168.49.2:31637/docs
 ```
+
+## How to check Kubernetes Services
+```
+atul@atul-Lenovo-G570:~$ kubectl get services
+
+```
+
+## How to know that `LoadBalancer` used
+1. first run the command `kubectl get services`.
+```
+atul@atul-Lenovo-G570:~$ kubectl get services -n tinytechservices-namespace
+NAME                       TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+tinytechservices-service   NodePort   10.111.180.58   <none>        80:31637/TCP   23h
+
+```
+2. In type column NodePort is seen. It means `LoadBalancer` is not used.
+
+
+## how to check all namespaces pods
+command: `$ kubectl get pods --all-namespaces`
+```
+atul@atul-Lenovo-G570:~$ kubectl get pods --all-namespaces
+```
+
+## how to check pods of a specific namesapce
+- command: `$ kubectl get pods -n <namespacename>`
+```
+atul@atul-Lenovo-G570:~$ kubectl get pods -n tinytechservices-namespace
+```
+
+## how to check service of specific namespace
+- command: `$ kubectl get services -n tinytechservices-namespace`
+```
+atul@atul-Lenovo-G570:~$ kubectl get services -n tinytechservices-namespace
+NAME                       TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+tinytechservices-service   NodePort   10.111.180.58   <none>        80:31637/TCP   23h
+```
+- Note: you can see this service name in `service.yml` file also
+
+## How to check pods label
+- command: `$ kubectl get pods -n <namespacename> --show-labels`
+```
+atul@atul-Lenovo-G570:~$ kubectl get pods -n tinytechservices-namespace --show-labels
+NAME                                          READY   STATUS    RESTARTS      AGE   LABELS
+tinytechservicesdeployment-868fb86c4d-26zdd   1/1     Running   2 (38m ago)   23h   app=tinytechservicespods,pod-template-hash=868fb86c4d
+tinytechservicesdeployment-868fb86c4d-6fc4w   1/1     Running   2 (38m ago)   23h   app=tinytechservicespods,pod-template-hash=868fb86c4d
+atul@atul-Lenovo-G570
+```
+
+## run the below command to access using localhost
+1. command: `$ kubectl port-forward -n <namespacename> service/<servicename> 8000:80`
+```
+atul@atul-Lenovo-G570:~$ kubectl port-forward -n tinytechservices-namespace service/tinytechservices-service 8000:80
+
+```
+2. explain the command
+ - `kubectl`: It is a Kubernetes CLI tool. It used to manage clusters
+ - `port-forward`: used for temporary port mapping. After mapping you can access kubernetes pods or service in local machine
+ - `service/`: It said that port-forwarding used on service level. not on pod level
+ - `8000:80`: `8000` it is a localhost port. `80` is internal port of Kubernetes service. It is defined in `service.yml` file
+
+3. Now you can check `http://localhost:8000/docs`
